@@ -2,7 +2,6 @@
 
 import { useEffect } from "react"
 import { useRouter } from "next/navigation"
-import { HeaderProfile } from "@/components/header-profile"
 import { DashboardContent } from "@/components/dashboard-content"
 
 export default function DashboardPage() {
@@ -15,10 +14,5 @@ export default function DashboardPage() {
     }
   }, [router])
 
-  return (
-    <>
-      <HeaderProfile />
-      <DashboardContent />
-    </>
-  )
+  return <DashboardContent />
 }

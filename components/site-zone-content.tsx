@@ -38,7 +38,7 @@ export function SiteZoneContent() {
   const [zones, setZones] = useState([
     {
       id: 1,
-      name: "Soulcnt Main Zone",
+      name: "Zone Z001",
       site: "soulcnt.com",
       format: "Website",
       size: "Website Publisher",
