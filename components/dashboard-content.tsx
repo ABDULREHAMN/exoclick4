@@ -129,10 +129,76 @@ export function DashboardContent({ onNavigate }: DashboardContentProps) {
     return sortedData
   }, [forceRefresh])
 
+  // Detailed recent activity data - sorted DESC by date (newest first)
+  const detailedRecentActivity = [
+    {
+      date: "21 Feb",
+      activity: "Peak earnings recorded for soulcnt.com",
+      site: "https://soulcnt.com",
+      revenue: 68,
+      impressions: 8740,
+      clicks: 113,
+      ecpm: 74,
+      status: "Peak Performance",
+      type: "performance",
+    },
+    {
+      date: "20 Feb",
+      activity: "High revenue spike detected on soulcnt.com",
+      site: "https://soulcnt.com",
+      revenue: 45,
+      impressions: 12308,
+      clicks: 298,
+      ecpm: 60,
+      status: "Spike Recorded",
+      type: "spike",
+    },
+    {
+      date: "19 Feb",
+      activity: "Revenue milestone achieved on soulcnt.com",
+      site: "https://soulcnt.com",
+      revenue: 31,
+      impressions: 13876,
+      clicks: 130,
+      ecpm: 31,
+      status: "Performance Increase",
+      type: "milestone",
+    },
+    {
+      date: "14 Feb",
+      activity: "KYC verification approved for Publisher account",
+      site: "https://soulcnt.com",
+      status: "Verified",
+      type: "verification",
+    },
+    {
+      date: "11 Feb",
+      activity: "Website successfully added to dashboard",
+      site: "https://soulcnt.com",
+      status: "Approved",
+      type: "approval",
+    },
+    {
+      date: "11 Feb",
+      activity: "Zone created for soulcnt.com",
+      site: "https://soulcnt.com",
+      zone: "Soulcnt Main Zone",
+      status: "Active",
+      type: "zone",
+    },
+    {
+      date: "11 Feb",
+      activity: "Publisher account registered and linked to soulcnt.com",
+      site: "https://soulcnt.com",
+      status: "Account Active",
+      type: "account",
+    },
+  ]
+
   // Recent activity - always shows latest entries first
   const recentActivityData = useMemo(() => {
-    return allReportData.slice(0, 4) // Get top 4 latest entries
-  }, [allReportData])
+    return detailedRecentActivity.slice(0, 4) // Get top 4 latest entries
+  }, [forceRefresh])
 
   // Latest activity - always the first (newest) entry
   const latestActivity = useMemo(() => {
@@ -1652,39 +1718,55 @@ ${exportData.map((d) => `${d.Date} | Revenue: ${d.Revenue} | Impressions: ${d.Im
         </Card>
       </div>
 
-      {/* Recent Activity - Show last 10 from filtered data */}
+      {/* Recent Activity - Show detailed activity log */}
       <div className="space-y-4">
         <h3 className="text-lg font-medium">Recent Activity</h3>
         <Card className="p-6">
-          <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead>
-                <tr className="border-b">
-                  <th className="text-left py-3 px-4 font-medium text-sm">Date</th>
-                  <th className="text-left py-3 px-4 font-medium text-sm">Domain</th>
-                  <th className="text-left py-3 px-4 font-medium text-sm">Impressions</th>
-                  <th className="text-left py-3 px-4 font-medium text-sm">Clicks</th>
-                  <th className="text-left py-3 px-4 font-medium text-sm">CTR</th>
-                  <th className="text-left py-3 px-4 font-medium text-sm">eCPM</th>
-                  <th className="text-left py-3 px-4 font-medium text-sm">Revenue</th>
-                </tr>
-              </thead>
-              <tbody>
-                {/* Update Recent Activity to use filtered data (show last 10) */}
-                {recentActivityData.map((item, index) => (
-                  <RecentActivityRow
-                    key={index}
-                    date={item.date}
-                    domain="techblogi.com"
-                    impressions={item.impressions}
-                    clicks={item.clicks}
-                    ctr={item.ctr}
-                    ecpm={item.ecpm}
-                    revenue={item.revenue}
-                  />
-                ))}
-              </tbody>
-            </table>
+          <div className="space-y-4">
+            {recentActivityData.map((item, index) => (
+              <div key={index} className="flex items-start gap-4 pb-4 border-b last:border-b-0 last:pb-0">
+                <div className="flex-shrink-0 pt-1">
+                  <div className={`w-3 h-3 rounded-full ${
+                    item.type === "performance" ? "bg-green-500" :
+                    item.type === "spike" ? "bg-blue-500" :
+                    item.type === "milestone" ? "bg-purple-500" :
+                    item.type === "verification" ? "bg-emerald-500" :
+                    item.type === "approval" ? "bg-cyan-500" :
+                    item.type === "zone" ? "bg-orange-500" :
+                    "bg-gray-500"
+                  }`} />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-start justify-between gap-2 mb-1">
+                    <p className="font-medium text-sm">{item.activity}</p>
+                    <span className="text-xs text-gray-500 whitespace-nowrap">{item.date}</span>
+                  </div>
+                  <div className="flex items-center gap-2 mb-2">
+                    <span className="text-xs text-gray-600">{item.site}</span>
+                    {item.zone && <span className="text-xs text-gray-600">• Zone: {item.zone}</span>}
+                  </div>
+                  <div className="flex items-center gap-3 flex-wrap">
+                    <span className={`text-xs px-2 py-1 rounded-full font-medium ${
+                      item.status?.includes("Peak") || item.status === "Verified" || item.status === "Approved" || item.status === "Active" || item.status === "Account Active"
+                        ? "bg-green-100 text-green-700"
+                        : item.status?.includes("Spike") ? "bg-blue-100 text-blue-700"
+                        : item.status?.includes("Performance") ? "bg-purple-100 text-purple-700"
+                        : "bg-gray-100 text-gray-700"
+                    }`}>
+                      {item.status}
+                    </span>
+                    {item.revenue && (
+                      <>
+                        <span className="text-xs text-gray-600">Revenue: ${item.revenue}</span>
+                        <span className="text-xs text-gray-600">Impressions: {item.impressions}</span>
+                        <span className="text-xs text-gray-600">Clicks: {item.clicks}</span>
+                        <span className="text-xs text-gray-600">eCPM: ${item.ecpm}</span>
+                      </>
+                    )}
+                  </div>
+                </div>
+              </div>
+            ))}
           </div>
         </Card>
       </div>
