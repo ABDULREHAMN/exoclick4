@@ -158,99 +158,99 @@ export function TopNavbar({ onNavigate }: TopNavbarProps) {
                       currentRole === option.role ? "bg-green-50 hover:bg-green-100" : "hover:bg-gray-50",
                     )}
                   >
-                    <div className="flex items-center justify-between w-full">
-                      <span
-                        className={cn(
-                          "text-sm font-medium",
-                          currentRole === option.role ? "text-green-600" : "text-gray-900",
-                        )}
-                      >
-                        {option.role}
-                      </span>
-                      {currentRole === option.role && (
-                        <span className="px-2 py-0.5 text-xs bg-green-100 text-green-700 rounded">Active</span>
-                      )}
-                    </div>
-                    <span className="text-xs text-gray-500 mt-1">{option.description}</span>
-                  </DropdownMenuItem>
-                ))}
-              </DropdownMenuContent>
-            </DropdownMenu>
-          </div>
+                <div className="flex items-center justify-between w-full">
+                  <span
+                    className={cn(
+                      "text-sm font-medium",
+                      currentRole === option.role ? "text-green-600" : "text-gray-900",
+                    )}
+                  >
+                    {option.role}
+                  </span>
+                  {currentRole === option.role && (
+                    <span className="px-2 py-0.5 text-xs bg-green-100 text-green-700 rounded">Active</span>
+                  )}
+                </div>
+                <span className="text-xs text-gray-500 mt-1">{option.description}</span>
+              </DropdownMenuItem>
+            ))}
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
 
-          {balanceInfo && (
-            <div className="flex items-center gap-2 px-3 py-1.5 bg-green-50 border border-green-200 rounded mr-4">
-              <span className="text-xs text-gray-600">{balanceInfo.label}:</span>
-              <span className="text-sm font-semibold text-green-600">{balanceInfo.value}</span>
-            </div>
-          )}
-
-          <div className="relative hidden md:block">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={16} />
-            <Input className="pl-10 w-64" placeholder="Search..." />
-          </div>
+      {balanceInfo && (
+        <div className="flex items-center gap-2 px-3 py-1.5 bg-green-50 border border-green-200 rounded mr-4">
+          <span className="text-xs text-gray-600">{balanceInfo.label}:</span>
+          <span className="text-sm font-semibold text-green-600">{balanceInfo.value}</span>
         </div>
-        <div className="flex items-center space-x-4">
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <button className="p-2 rounded-full hover:bg-gray-100 transition-colors">
-                  <Globe size={20} />
-                </button>
-              </TooltipTrigger>
-              <TooltipContent>
-                <p>Change language</p>
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
+      )}
 
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" className="relative p-2 rounded-full hover:bg-gray-100 transition-colors">
-                <Bell size={20} />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent
-              align="end"
-              className="w-80 bg-white border border-gray-200 shadow-lg rounded-md"
-              sideOffset={5}
-            >
-              <div className="px-3 py-2 border-b border-gray-100">
-                <p className="text-sm font-medium text-gray-900">Notifications</p>
-              </div>
+      <div className="relative hidden md:block">
+        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={16} />
+        <Input className="pl-10 w-64" placeholder="Search..." />
+      </div>
+    </div>
+    <div className="flex items-center space-x-4">
+      <TooltipProvider>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <button className="p-2 rounded-full hover:bg-gray-100 transition-colors">
+              <Globe size={20} />
+            </button>
+          </TooltipTrigger>
+          <TooltipContent>
+            <p>Change language</p>
+          </TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
 
-              <div className="px-3 py-8 text-center text-sm text-gray-500">No notifications</div>
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button variant="ghost" className="relative p-2 rounded-full hover:bg-gray-100 transition-colors">
+            <Bell size={20} />
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent
+          align="end"
+          className="w-80 bg-white border border-gray-200 shadow-lg rounded-md"
+          sideOffset={5}
+        >
+          <div className="px-3 py-2 border-b border-gray-100">
+            <p className="text-sm font-medium text-gray-900">Notifications</p>
+          </div>
 
-              <div className="px-3 py-2 border-t border-gray-100">
-                <button className="text-xs text-blue-600 hover:text-blue-800 font-medium w-full text-center">
-                  View All Notifications
-                </button>
-              </div>
-            </DropdownMenuContent>
-          </DropdownMenu>
+          <div className="px-3 py-8 text-center text-sm text-gray-500">No notifications</div>
 
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" className="flex items-center space-x-2 hover:bg-gray-100 transition-colors p-2">
-                <div className="flex flex-col items-end mr-2 hidden md:flex">
-                  <span className="text-xs text-gray-500 leading-tight">Publisher Account</span>
-                  <span className="text-sm text-gray-700 font-medium leading-tight">Raja Usman</span>
-                </div>
-                <div className="w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center">
-                  <User size={16} className="text-gray-600" />
-                </div>
-                <ChevronDown size={16} className="ml-2 text-gray-500" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent
-              align="end"
-              className="w-56 bg-white border border-gray-200 shadow-lg rounded-md"
-              sideOffset={5}
-            >
-              <div className="px-3 py-2 border-b border-gray-100">
-                <p className="text-sm font-medium text-gray-900">rajausman002</p>
-                <p className="text-xs text-gray-500">Publisher Account</p>
-              </div>
+          <div className="px-3 py-2 border-t border-gray-100">
+            <button className="text-xs text-blue-600 hover:text-blue-800 font-medium w-full text-center">
+              View All Notifications
+            </button>
+          </div>
+        </DropdownMenuContent>
+      </DropdownMenu>
+
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button variant="ghost" className="flex items-center space-x-2 hover:bg-gray-100 transition-colors p-2">
+            <div className="flex flex-col items-end mr-2 hidden md:flex">
+              <span className="text-xs text-gray-500 leading-tight">Publisher Account</span>
+              <span className="text-sm text-gray-700 font-medium leading-tight">Yasir Ali</span>
+            </div>
+            <div className="w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center">
+              <User size={16} className="text-gray-600" />
+            </div>
+            <ChevronDown size={16} className="ml-2 text-gray-500" />
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent
+          align="end"
+          className="w-56 bg-white border border-gray-200 shadow-lg rounded-md"
+          sideOffset={5}
+        >
+          <div className="px-3 py-2 border-b border-gray-100">
+            <p className="text-sm font-medium text-gray-900">yasirali003</p>
+            <p className="text-xs text-gray-500">Publisher Account</p>
+          </div>
 
               <DropdownMenuItem
                 onClick={handleViewProfile}
