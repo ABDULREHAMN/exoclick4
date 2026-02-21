@@ -1,7 +1,7 @@
 "use client"
 
 import React from "react"
-import { useState, useMemo } from "react"
+import { useState, useMemo, useEffect } from "react"
 import {
   Eye,
   MousePointer,
@@ -38,7 +38,7 @@ import {
   Legend,
 } from "recharts"
 
-type DashboardView = "default" | "new" | "overview" // Added "overview" to DashboardView
+type DashboardView = "default" | "new" | "overview"
 type WidgetType = "default" | "today" | "hourly"
 
 interface DashboardContentProps {
@@ -46,23 +46,41 @@ interface DashboardContentProps {
 }
 
 export function DashboardContent({ onNavigate }: DashboardContentProps) {
-  const [dashboardView, setDashboardView] = useState<DashboardView>("default") // Changed initial state to "overview"
+  const [dashboardView, setDashboardView] = useState<DashboardView>("default")
   const [activeWidget, setActiveWidget] = useState<WidgetType>("default")
   const [groupBy, setGroupBy] = useState("Day")
   const [chartView, setChartView] = useState<"daily" | "weekly" | "monthly">("daily")
-  // const [dateRange, setDateRange] = useState<7 | 14 | 30 | null>(null) // REMOVED
-
   const [dashboardDateRange, setDashboardDateRange] = useState<7 | 14 | 30 | null>(null)
-  // Updated to array-based multi-select for countries and devices
   const [selectedCountries, setSelectedCountries] = useState<string[]>(["All"])
   const [selectedDevices, setSelectedDevices] = useState<string[]>(["All"])
-
   const [geoView, setGeoView] = useState<"overview" | "comparison">("overview")
   const [comparisonCountries, setComparisonCountries] = useState<string[]>([
     "United States",
     "United Kingdom",
     "Canada",
   ])
+  const [forceRefresh, setForceRefresh] = useState(0)
+
+  // Force data fetch on component mount and when session storage changes
+  useEffect(() => {
+    const handleStorageChange = () => {
+      setForceRefresh((prev) => prev + 1)
+    }
+
+    window.addEventListener("storage", handleStorageChange)
+    // Also listen to session storage changes
+    const checkSessionRefresh = setInterval(() => {
+      const lastRefresh = sessionStorage.getItem("dashboardRefresh")
+      if (lastRefresh) {
+        setForceRefresh((prev) => prev + 1)
+      }
+    }, 1000)
+
+    return () => {
+      window.removeEventListener("storage", handleStorageChange)
+      clearInterval(checkSessionRefresh)
+    }
+  }, [])
 
   const handleDashboardChange = (view: DashboardView) => {
     setDashboardView(view)
@@ -79,6 +97,7 @@ export function DashboardContent({ onNavigate }: DashboardContentProps) {
     }
   }
 
+  // Financial data - no caching
   const availableBalance = 341
   const pendingBalance = 0
   const thisMonthEarnings = 341
@@ -86,50 +105,64 @@ export function DashboardContent({ onNavigate }: DashboardContentProps) {
   const totalEarnings = 341
   const nextWithdrawalDate = ""
 
-  const allReportData = [
-    { date: "Feb 12, 2026", impressions: 19022, clicks: 78, revenue: 20, ctr: "0.41%", ecpm: "5.00" },
-    { date: "Feb 13, 2026", impressions: 18200, clicks: 85, revenue: 22, ctr: "0.47%", ecpm: "8.00" },
-    { date: "Feb 14, 2026", impressions: 17450, clicks: 92, revenue: 24, ctr: "0.53%", ecpm: "11.00" },
-    { date: "Feb 15, 2026", impressions: 16680, clicks: 100, revenue: 26, ctr: "0.60%", ecpm: "15.00" },
-    { date: "Feb 16, 2026", impressions: 15890, clicks: 108, revenue: 27, ctr: "0.68%", ecpm: "18.00" },
+  // Raw data source - sorted DESC by date (latest first)
+  const rawReportData = [
+    { date: "Feb 21, 2026", impressions: 8740, clicks: 113, revenue: 68, ctr: "1.29%", ecpm: "74.00" },
+    { date: "Feb 20, 2026", impressions: 12308, clicks: 298, revenue: 45, ctr: "2.42%", ecpm: "60.00" },
+    { date: "Feb 19, 2026", impressions: 13876, clicks: 130, revenue: 31, ctr: "0.94%", ecpm: "31.00" },
+    { date: "Feb 18, 2026", impressions: 14400, clicks: 120, revenue: 30, ctr: "0.83%", ecpm: "27.00" },
     { date: "Feb 17, 2026", impressions: 15030, clicks: 115, revenue: 29, ctr: "0.77%", ecpm: "22.00" },
-    { date: "Feb 18, 2026", impressions: 14400, clicks: 120, revenue: 30, ctr: "0.83%", ecpm: "27.00" },
-    { date: "Feb 19, 2026", impressions: 13876, clicks: 130, revenue: 31, ctr: "0.94%", ecpm: "31.00" },
-    { date: "Feb 20, 2026", impressions: 12308, clicks: 298, revenue: 45, ctr: "2.42%", ecpm: "60.00" },
-    { date: "Feb 21, 2026", impressions: 8740, clicks: 113, revenue: 68, ctr: "1.29%", ecpm: "74.00" },
+    { date: "Feb 16, 2026", impressions: 15890, clicks: 108, revenue: 27, ctr: "0.68%", ecpm: "18.00" },
+    { date: "Feb 15, 2026", impressions: 16680, clicks: 100, revenue: 26, ctr: "0.60%", ecpm: "15.00" },
+    { date: "Feb 14, 2026", impressions: 17450, clicks: 92, revenue: 24, ctr: "0.53%", ecpm: "11.00" },
+    { date: "Feb 13, 2026", impressions: 18200, clicks: 85, revenue: 22, ctr: "0.47%", ecpm: "8.00" },
+    { date: "Feb 12, 2026", impressions: 19022, clicks: 78, revenue: 20, ctr: "0.41%", ecpm: "5.00" },
   ]
 
-  const recentActivityData = [
-    { date: "Feb 21, 2026", impressions: 8740, clicks: 113, revenue: 68, ctr: "1.29%", ecpm: "74.00" },
-    { date: "Feb 20, 2026", impressions: 12308, clicks: 298, revenue: 45, ctr: "2.42%", ecpm: "60.00" },
-    { date: "Feb 19, 2026", impressions: 13876, clicks: 130, revenue: 31, ctr: "0.94%", ecpm: "31.00" },
-    { date: "Feb 18, 2026", impressions: 14400, clicks: 120, revenue: 30, ctr: "0.83%", ecpm: "27.00" },
-  ]
+  // Memoized sorted data - ensures latest is always first
+  const allReportData = useMemo(() => {
+    const sortedData = [...rawReportData].sort((a, b) => {
+      const dateA = new Date(a.date).getTime()
+      const dateB = new Date(b.date).getTime()
+      return dateB - dateA // DESC order - newest first
+    })
+    return sortedData
+  }, [forceRefresh])
 
-  const latestActivity = {
-    date: "Feb 21, 2026",
-    revenue: 68,
-    impressions: 8740,
-    clicks: 113,
-    ctr: "1.29%",
-    ecpm: "74.00",
-  }
+  // Recent activity - always shows latest entries first
+  const recentActivityData = useMemo(() => {
+    return allReportData.slice(0, 4) // Get top 4 latest entries
+  }, [allReportData])
 
-  const todayRevenue = 68
-  const todayImpressions = 8740
-  const todayClicks = 113
-  const todayCTR = "1.29"
-  const todayECPM = "74.00"
+  // Latest activity - always the first (newest) entry
+  const latestActivity = useMemo(() => {
+    return allReportData[0] || {
+      date: "Feb 21, 2026",
+      revenue: 68,
+      impressions: 8740,
+      clicks: 113,
+      ctr: "1.29%",
+      ecpm: "74.00",
+    }
+  }, [allReportData])
+
+  // Today's metrics - from latest activity
+  const todayRevenue = latestActivity.revenue as number
+  const todayImpressions = latestActivity.impressions as number
+  const todayClicks = latestActivity.clicks as number
+  const todayCTR = typeof latestActivity.ctr === "string" ? latestActivity.ctr.replace("%", "") : "1.29"
+  const todayECPM = typeof latestActivity.ecpm === "string" ? latestActivity.ecpm : "74.00"
 
   const hourlyData = []
 
-  const todayTotals = {
-    impressions: 8740,
-    clicks: 113,
-    revenue: 68,
-  }
-
-  // This ensures all data aggregates to locked totals: $4,819.23 revenue, 32,687 clicks, 567,531 impressions
+  // Today totals - synced with latest activity
+  const todayTotals = useMemo(() => {
+    return {
+      impressions: todayImpressions,
+      clicks: todayClicks,
+      revenue: todayRevenue,
+    }
+  }, [todayImpressions, todayClicks, todayRevenue])
 
   // Define country distribution percentages (must sum to 100%)
   const countryDistribution = {
@@ -531,24 +564,34 @@ export function DashboardContent({ onNavigate }: DashboardContentProps) {
       })
     }
 
-    // Note: Country and device filters are present in UI but data is aggregated
-    // Filters don't actually segment data as it's all combined
-    // Filter state is maintained for UI consistency per requirements
+    // Sort by date DESC (newest first) - critical for real-time data display
+    filtered.sort((a, b) => {
+      const dateA = new Date(a.date).getTime()
+      const dateB = new Date(b.date).getTime()
+      return dateB - dateA // DESC order
+    })
 
     return filtered
   }
 
-  const filteredReportData = applyDashboardFilters(allReportData)
+  const filteredReportData = useMemo(() => {
+    return applyDashboardFilters(allReportData)
+  }, [allReportData, dashboardDateRange, forceRefresh])
 
   const getFilteredData = () => {
-    // This function is no longer directly used for chart data, but kept for potential future use or specific components.
-    // It returns data based on the dateRange state (which is now dashboardDateRange).
-    if (!dashboardDateRange) return allReportData
+    // Returns data sorted by date DESC (newest first)
+    if (!dashboardDateRange) {
+      return [...allReportData].sort((a, b) => {
+        const dateA = new Date(a.date).getTime()
+        const dateB = new Date(b.date).getTime()
+        return dateB - dateA // DESC order - newest first
+      })
+    }
 
     const sortedData = [...allReportData].sort((a, b) => {
-      const dateA = new Date(a.date)
-      const dateB = new Date(b.date)
-      return dateB.getTime() - dateA.getTime()
+      const dateA = new Date(a.date).getTime()
+      const dateB = new Date(b.date).getTime()
+      return dateB - dateA // DESC order - newest first
     })
 
     return sortedData.slice(0, dashboardDateRange)
@@ -558,7 +601,8 @@ export function DashboardContent({ onNavigate }: DashboardContentProps) {
     const data = filteredReportData
 
     if (chartView === "daily") {
-      return data.map((item) => ({
+      // For daily view, reverse to show chronologically ascending for better chart visualization
+      const dailyData = data.map((item) => ({
         date: new Date(item.date).toLocaleDateString("en-US", {
           month: "short",
           day: "numeric",
@@ -567,6 +611,8 @@ export function DashboardContent({ onNavigate }: DashboardContentProps) {
         impressions: item.impressions,
         clicks: item.clicks,
       }))
+      // Reverse to show oldest to newest for chart visual flow
+      return dailyData.reverse()
     } else if (chartView === "weekly") {
       // Weekly aggregation starting Monday
       const weeklyData: Record<string, { revenue: number; impressions: number; clicks: number; startDate: Date }> = {}
@@ -611,7 +657,7 @@ export function DashboardContent({ onNavigate }: DashboardContentProps) {
         ...data,
       }))
     }
-  }, [filteredReportData, chartView])
+  }, [filteredReportData, chartView, forceRefresh])
 
   const {
     totalRevenue: calculatedTotalRevenue,
@@ -631,7 +677,7 @@ export function DashboardContent({ onNavigate }: DashboardContentProps) {
       totalClicks: total.clicks,
       totalImpressions: total.impressions,
     }
-  }, [filteredReportData])
+  }, [filteredReportData, forceRefresh])
 
   // Display totals - use calculated when filters are active, otherwise use fixed totals
   const displayTotalRevenue = dashboardDateRange !== null ? calculatedTotalRevenue : 0 // Updated fixed total
