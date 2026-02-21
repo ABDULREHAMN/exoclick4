@@ -5,6 +5,74 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Switch } from "@/components/ui/switch"
 import { Label } from "@/components/ui/label"
+import { CheckCircle2, Clock, FileText, Shield, Zap } from "lucide-react"
+
+const ACCOUNT_ACTIVITY = [
+  {
+    date: "11 Feb",
+    activity: "Publisher account created",
+    username: "yasirali003",
+    site: "soulcnt.com",
+    status: "Account Registered",
+    icon: "user",
+  },
+  {
+    date: "11 Feb",
+    activity: "Website added to dashboard",
+    site: "https://soulcnt.com",
+    status: "Pending Review",
+    icon: "globe",
+  },
+  {
+    date: "11 Feb",
+    activity: "Zone created for soulcnt.com",
+    zone: "Soulcnt Main Zone",
+    status: "Active",
+    icon: "zone",
+  },
+  {
+    date: "11 Feb",
+    activity: "Publisher joined ExoClick network",
+    joinDate: "11 Feb 2026",
+    status: "Active",
+    icon: "network",
+  },
+  {
+    date: "14 Feb",
+    activity: "KYC documents submitted",
+    verificationType: "Identity Verification",
+    status: "Under Review",
+    icon: "document",
+  },
+  {
+    date: "14 Feb",
+    activity: "KYC verification approved",
+    verificationType: "Identity Verification",
+    status: "Approved",
+    icon: "check",
+  },
+  {
+    date: "14 Feb",
+    activity: "Publisher account fully verified",
+    status: "Verified",
+    icon: "shield",
+  },
+]
+
+const getActivityIcon = (iconType: string) => {
+  switch (iconType) {
+    case "check":
+      return <CheckCircle2 className="w-5 h-5 text-green-500" />
+    case "document":
+      return <FileText className="w-5 h-5 text-blue-500" />
+    case "shield":
+      return <Shield className="w-5 h-5 text-purple-500" />
+    case "globe":
+      return <Zap className="w-5 h-5 text-orange-500" />
+    default:
+      return <Clock className="w-5 h-5 text-gray-500" />
+  }
+}
 
 export function SettingsContent() {
   return (
@@ -18,6 +86,7 @@ export function SettingsContent() {
           <TabsTrigger value="security">Security</TabsTrigger>
           <TabsTrigger value="notifications">Notifications</TabsTrigger>
           <TabsTrigger value="billing">Billing</TabsTrigger>
+          <TabsTrigger value="activity">Activity</TabsTrigger>
           <TabsTrigger value="api">API</TabsTrigger>
         </TabsList>
 
@@ -138,7 +207,40 @@ export function SettingsContent() {
           </Card>
         </TabsContent>
 
-        <TabsContent value="api" className="space-y-6">
+        <TabsContent value="activity" className="space-y-6">
+          <Card className="p-6">
+            <h2 className="text-lg font-medium mb-6">Account Activity Log</h2>
+            <div className="space-y-6">
+              {ACCOUNT_ACTIVITY.map((item, index) => (
+                <div key={index} className="flex gap-4 pb-6 border-b last:border-b-0 last:pb-0">
+                  <div className="flex-shrink-0 mt-1">{getActivityIcon(item.icon)}</div>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-start justify-between gap-2 mb-1">
+                      <p className="font-medium text-sm">{item.activity}</p>
+                      <span className="text-xs text-gray-500 whitespace-nowrap">{item.date}</span>
+                    </div>
+                    <p className="text-sm text-gray-600 mb-2">
+                      {item.site && `Site: ${item.site}`}
+                      {item.zone && `Zone: ${item.zone}`}
+                      {item.verificationType && `Verification: ${item.verificationType}`}
+                      {item.username && `Username: ${item.username}`}
+                    </p>
+                    <div className="inline-block">
+                      <span className={`text-xs px-2 py-1 rounded-full font-medium ${
+                        item.status === "Active" ? "bg-green-100 text-green-700" :
+                        item.status === "Approved" || item.status === "Verified" ? "bg-green-100 text-green-700" :
+                        item.status === "Pending Review" || item.status === "Under Review" ? "bg-yellow-100 text-yellow-700" :
+                        "bg-gray-100 text-gray-700"
+                      }`}>
+                        {item.status}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </Card>
+        </TabsContent>
           <Card className="p-6">
             <h2 className="text-lg font-medium mb-4">API Keys</h2>
             <div className="space-y-4">
