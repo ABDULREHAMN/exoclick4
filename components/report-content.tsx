@@ -326,7 +326,7 @@ export function ReportContent() {
               value={selectedSite}
               onChange={(e) => setSelectedSite(e.target.value)}
             >
-              <option>https://soulcnt.com</option>
+              <option>https://techblogi.com</option>
               <option>All Sites</option>
             </select>
           </div>
