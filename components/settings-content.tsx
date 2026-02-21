@@ -241,6 +241,8 @@ export function SettingsContent() {
             </div>
           </Card>
         </TabsContent>
+
+        <TabsContent value="api" className="space-y-6">
           <Card className="p-6">
             <h2 className="text-lg font-medium mb-4">API Keys</h2>
             <div className="space-y-4">
