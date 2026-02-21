@@ -15,24 +15,24 @@ interface ProfilePageProps {
 }
 
 const ACCOUNT_STATISTICS = {
-  totalRevenue: 341,
-  totalImpressions: 151596,
-  totalClicks: 1239,
+  totalRevenue: 0.003,
+  totalImpressions: 10,
+  totalClicks: 1,
 } as const
 
 export function ProfilePage({ onBack }: ProfilePageProps) {
   const { kycStatus, verificationDate, kycReference, fullName } = useKyc()
   const [isEditing, setIsEditing] = useState(false)
   const [profileData, setProfileData] = useState({
-    fullName: "Yasir Ali",
-    email: "Yasirali786007@gmail.com",
-    username: "yasirali003",
+    fullName: "Abdul Rehman",
+    email: "rajausman002@gmail.com",
+    username: "rajausman002",
     company: "",
     phone: "",
     address: "",
     bio: "",
-    website: "https://soulcnt.com",
-    joinDate: "January 16, 2026",
+    website: "https://techblogi.com/",
+    joinDate: "January 13, 2026",
   })
 
   const handleSave = () => {
